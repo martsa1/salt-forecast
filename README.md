@@ -21,3 +21,11 @@ $ python weather_check.py 15 51.123456 -1.123456 --secret SomeSecretKeyHere!
 2017-01-06 09:58:17,943 Starting new HTTPS connection (1): api.darksky.net
 2017-01-06 09:58:18,350 You don't need to worry about salt tonight.
 ```
+
+## Prerequisites:
+
+This script requires Python and the argparse, logging & requests Python modules. For Ubuntu only the requests module is not included with the basic Python pacakges.  It can be installed by:
+
+```
+sudo apt install python python-requests
+```
