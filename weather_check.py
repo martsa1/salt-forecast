@@ -118,8 +118,6 @@ def parse_request(response_data=None, hours_from_now=15):
 
 
 if __name__ == "__main__":
-    logFormatStr = '%(asctime)s %(message)s'
-    logging.basicConfig(format=logFormatStr, level=logging.INFO)
 
     parser = argparse.ArgumentParser(
         description='Find out if we need to layout salt for ice the next'
@@ -138,6 +136,12 @@ if __name__ == "__main__":
                         type=float,
                         help='Longitude in decimal form, i.e. -1.123456')
 
+    parser.add_argument('--log',
+                        type=str,
+                        required=False,
+                        help='Set log level to:'
+                        ' DEBUG, INFO, WARNING, ERROR, CRITICAL')
+
     parser.add_argument('--secret',
                         type=str,
                         required=True,
@@ -145,6 +149,12 @@ if __name__ == "__main__":
                         ' retrieve yours from https://darksky.net/dev/account')
 
     arguments = vars(parser.parse_args())
+
+    logFormatStr = '%(levelname)s:%(asctime)s %(message)s'
+    if arguments['log']:
+        logging.basicConfig(format=logFormatStr, level=arguments['log'].upper())
+    else:
+        logging.basicConfig(format=logFormatStr)
 
     logging.info('Retrieving local weather forecast')
 
