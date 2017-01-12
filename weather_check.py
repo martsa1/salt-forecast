@@ -58,10 +58,7 @@ def retrieve_forecast(secret_key,
                       'forecast')
         exit(1)
 
-    if need_salt:
-        logging.info('You need to lay out some salt tonight!')
-    else:
-        logging.info('You don\'t need to worry about salt tonight.')
+    return need_salt
 
 
 def parse_request(response_data=None, hours_from_now=15):
@@ -158,7 +155,21 @@ if __name__ == "__main__":
 
     logging.info('Retrieving local weather forecast')
 
-    retrieve_forecast(secret_key=arguments['secret'],
-                      latitude=arguments['latitude'],
-                      longitude=arguments['longitude'],
-                      hours_from_now=arguments['hours_from_now'])
+    
+
+    salt_needed = retrieve_forecast(secret_key=arguments['secret'],
+                                    latitude=arguments['latitude'],
+                                    longitude=arguments['longitude'],
+                                    hours_from_now=arguments['hours_from_now'])
+    message = ''
+    if salt_needed:
+        # salt needed
+        message = 'You need to lay out some salt tonight!'
+        logging.info(message)
+    else:
+        # salt not needed
+        message = 'You don\'t need to worry about salt tonight.'
+        logging.info(message)
+
+        print(message)
+
