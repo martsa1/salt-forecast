@@ -58,10 +58,7 @@ def retrieve_forecast(secret_key,
                       'forecast')
         exit(1)
 
-    if need_salt:
-        logging.info('You need to lay out some salt tonight!')
-    else:
-        logging.info('You don\'t need to worry about salt tonight.')
+    return need_salt
 
 
 def parse_request(response_data=None, hours_from_now=15):
@@ -118,8 +115,6 @@ def parse_request(response_data=None, hours_from_now=15):
 
 
 if __name__ == "__main__":
-    logFormatStr = '%(asctime)s %(message)s'
-    logging.basicConfig(format=logFormatStr, level=logging.INFO)
 
     parser = argparse.ArgumentParser(
         description='Find out if we need to layout salt for ice the next'
@@ -138,6 +133,12 @@ if __name__ == "__main__":
                         type=float,
                         help='Longitude in decimal form, i.e. -1.123456')
 
+    parser.add_argument('--log',
+                        type=str,
+                        required=False,
+                        help='Set log level to:'
+                        ' DEBUG, INFO, WARNING, ERROR, CRITICAL')
+
     parser.add_argument('--secret',
                         type=str,
                         required=True,
@@ -146,9 +147,29 @@ if __name__ == "__main__":
 
     arguments = vars(parser.parse_args())
 
+    logFormatStr = '%(levelname)s:%(asctime)s %(message)s'
+    if arguments['log']:
+        logging.basicConfig(format=logFormatStr, level=arguments['log'].upper())
+    else:
+        logging.basicConfig(format=logFormatStr)
+
     logging.info('Retrieving local weather forecast')
 
-    retrieve_forecast(secret_key=arguments['secret'],
-                      latitude=arguments['latitude'],
-                      longitude=arguments['longitude'],
-                      hours_from_now=arguments['hours_from_now'])
+    
+
+    salt_needed = retrieve_forecast(secret_key=arguments['secret'],
+                                    latitude=arguments['latitude'],
+                                    longitude=arguments['longitude'],
+                                    hours_from_now=arguments['hours_from_now'])
+    message = ''
+    if salt_needed:
+        # salt needed
+        message = 'You need to lay out some salt tonight!'
+        logging.info(message)
+    else:
+        # salt not needed
+        message = 'You don\'t need to worry about salt tonight.'
+        logging.info(message)
+
+        print(message)
+
