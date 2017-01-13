@@ -1,7 +1,8 @@
 #!/usr/bin/python
 
 """
-    Simple module to pull out the liklihood of rain within the next 15 hours.
+    Simple module to pull out the liklihood of rain within the next 48 hours 
+    or less.
 
     Requires:
      - API Secret key
