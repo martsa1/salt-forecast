@@ -141,6 +141,14 @@ if __name__ == "__main__":
                         help='Set log level to:'
                         ' DEBUG, INFO, WARNING, ERROR, CRITICAL')
 
+    parser.add_argument('--quiet',
+                        dest='quiet',
+                        action='store_true',
+                        required=False,
+                        help='Do not output result ot STDOUT')
+
+    parser.set_defaults(quiet=False)
+
     parser.add_argument('--secret',
                         type=str,
                         required=True,
@@ -174,6 +182,7 @@ if __name__ == "__main__":
 
     logging.info(message)
 
+    if not arguments['quiet']:
         print(message)
 
     exit(salt_needed)
