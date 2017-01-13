@@ -8,8 +8,10 @@
      - latitude, Longitude
      - Hours to look ahead when determining forecast
 
-    Defaults to Kulite House and Sam Martin's secret key (probably not forever
-    though)
+    Returns:
+     - 0 for no need to salt
+     - 1 for need to salt
+     - negative numbers for errors
 
     Documentation on the Darksky API is available here:
      https://darksky.net/dev/
@@ -32,7 +34,7 @@ def retrieve_forecast(secret_key,
     if (secret_key is None or latitude is None or
             longitude is None or hours_from_now is None):
         logging.error('You haven\'t provided one or more required arguments')
-        exit(1)
+        exit(-1)
 
     url_base = 'https://api.darksky.net/forecast'
 
@@ -56,7 +58,7 @@ def retrieve_forecast(secret_key,
     else:
         logging.error('Something broke whilst attempting to retrieve a '
                       'forecast')
-        exit(1)
+        exit(-2)
 
     return need_salt
 
@@ -155,7 +157,6 @@ if __name__ == "__main__":
 
     logging.info('Retrieving local weather forecast')
 
-    
 
     salt_needed = retrieve_forecast(secret_key=arguments['secret'],
                                     latitude=arguments['latitude'],
@@ -165,11 +166,15 @@ if __name__ == "__main__":
     if salt_needed:
         # salt needed
         message = 'You need to lay out some salt tonight!'
-        logging.info(message)
+        salt_needed = 1
     else:
         # salt not needed
         message = 'You don\'t need to worry about salt tonight.'
-        logging.info(message)
+        salt_needed = 0
+
+    logging.info(message)
 
         print(message)
+
+    exit(salt_needed)
 
